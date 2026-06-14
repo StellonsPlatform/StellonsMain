@@ -7,14 +7,25 @@ class TaskExtractor:
 
         tasks = []
 
-        lines = plan.split("\n")
+        in_tasks_section = False
 
-        for line in lines:
+        for line in plan.split("\n"):
 
-            if re.match(r"^\d+\.", line.strip()):
+            line = line.strip()
 
-                task = line.strip()
+            if "**Tasks" in line:
+                in_tasks_section = True
+                continue
 
-                tasks.append(task)
+            if "**Milestones" in line:
+                break
+
+            if "**Dependencies" in line:
+                break
+
+            if in_tasks_section:
+
+                if re.match(r"^\d+\.", line):
+                    tasks.append(line)
 
         return tasks
