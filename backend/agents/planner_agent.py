@@ -1,27 +1,20 @@
-from pathlib import Path
-from backend.llm.nvidia_client import NvidiaClient
+from backend.agents.base_agent import BaseAgent
 
-class PlannerAgent:
+
+class PlannerAgent(BaseAgent):
 
     def __init__(self):
 
-        self.client=NvidiaClient()
-        self.system_prompt=Path("agents/planner/system_prompt.md").read_text()
-        
-    def plan(self,goal:str):
-        prompt = f"""
-            {self.system_prompt}
+        super().__init__(
+            "agents/planner/system_prompt.md"
+        )
 
-            Goal: {goal}
-        """
 
-        return self.client.generate(prompt)
-    
 if __name__ == "__main__":
 
     planner = PlannerAgent()
 
-    result = planner.plan(
+    result = planner.execute(
         "Build AKS deployment platform"
     )
 
