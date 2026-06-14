@@ -6,7 +6,7 @@ from backend.orchestrator.workflow_engine import WorkflowEngine
 
 app = FastAPI(
     title="Stellons API",
-    version="0.2.1"
+    version="0.2.2"
 )
 
 
@@ -16,14 +16,16 @@ class GoalRequest(BaseModel):
 
 @app.get("/")
 def root():
+
     return {
         "platform": "Stellons",
-        "version": "0.2.1"
+        "version": "0.2.2"
     }
 
 
 @app.get("/health")
 def health():
+
     return {
         "status": "healthy"
     }
@@ -34,11 +36,8 @@ def execute(request: GoalRequest):
 
     workflow = WorkflowEngine()
 
-    result = workflow.run(
+    result = workflow.execute(
         request.goal
     )
 
-    return {
-        "goal": request.goal,
-        "result": result
-    }
+    return result
