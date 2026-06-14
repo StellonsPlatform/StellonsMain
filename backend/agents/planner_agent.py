@@ -1,23 +1,19 @@
+from pathlib import Path
 from backend.llm.nvidia_client import NvidiaClient
-
 
 class PlannerAgent:
 
     def __init__(self):
-        self.client = NvidiaClient()
 
-    def plan(self, goal: str):
-
+        self.client=NvidiaClient()
+        self.system_prompt=Path("agents/planner/system_prompt.md").read_text()
+        
+    def plan(self,goal:str):
         prompt = f"""
-You are a cloud solution architect.
+            {self.system_prompt}
 
-Break the following goal into implementation tasks.
-
-Goal:
-{goal}
-
-Return a numbered list.
-"""
+            Goal: {goal}
+        """
 
         return self.client.generate(prompt)
     
