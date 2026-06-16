@@ -1,7 +1,20 @@
 from backend.agents.planner_agent import PlannerAgent
-from backend.orchestrator.task_extractor import TaskExtractor
-from backend.orchestrator.task_dispatcher import TaskDispatcher
-from backend.orchestrator.execution_engine import ExecutionEngine
+
+from backend.orchestrator.task_extractor import (
+    TaskExtractor,
+)
+
+from backend.orchestrator.task_dispatcher import (
+    TaskDispatcher,
+)
+
+from backend.orchestrator.execution_engine import (
+    ExecutionEngine,
+)
+
+from backend.services.goal_to_terraform_service import (
+    GoalToTerraformService,
+)
 
 
 class WorkflowEngine:
@@ -16,7 +29,14 @@ class WorkflowEngine:
 
         self.execution_engine = ExecutionEngine()
 
-    def execute(self, goal: str):
+        self.goal_to_terraform = (
+            GoalToTerraformService()
+        )
+
+    def execute(
+        self,
+        goal: str,
+    ):
 
         print(f"\nGOAL:\n{goal}\n")
 
@@ -41,7 +61,9 @@ class WorkflowEngine:
         print("TASK ASSIGNMENTS")
         print("=" * 50)
 
-        assignments = self.dispatcher.dispatch(tasks)
+        assignments = self.dispatcher.dispatch(
+            tasks
+        )
 
         for assignment in assignments:
             print(
@@ -53,12 +75,25 @@ class WorkflowEngine:
         print("EXECUTION")
         print("=" * 50)
 
-        results = self.execution_engine.execute_tasks(
-            tasks
+        results = (
+            self.execution_engine.execute_tasks(
+                tasks
+            )
+        )
+
+        terraform_artifact = (
+            self.goal_to_terraform.generate(
+                goal=goal,
+                tasks=tasks,
+            )
         )
 
         return {
             "goal": goal,
             "tasks": assignments,
-            "results": results
+            "results": results,
+            "terraform": {
+                "tool": terraform_artifact.tool,
+                "artifact": terraform_artifact.code,
+            },
         }
