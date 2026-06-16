@@ -1,19 +1,75 @@
-from backend.orchestrator.agent_router import AgentRouter
+from backend.orchestrator.llm_router import LLMRouter
 
-router = AgentRouter()
+
+router = LLMRouter()
+
+from backend.orchestrator.llm_router import LLMRouter
+
+
+router = LLMRouter()
+
 
 tasks = [
-    "Create FastAPI endpoint",
-    "Create AKS Terraform",
-    "Debug Kubernetes CrashLoopBackOff",
-    "Design Azure Architecture",
-    "Create README"
+    "Design AKS networking architecture",
+    "Create FastAPI backend",
+    "Deploy Kubernetes cluster",
+    "Write project documentation",
+    "Debug container startup failure",
 ]
+
 
 for task in tasks:
 
-    agent = router.route(task)
+    result = router.route(task)
 
     print(
-        f"{task} -> {type(agent).__name__}"
+        "\n========================"
+    )
+
+    print(
+        f"Task: {task}"
+    )
+
+    print(
+        f"Agent: {result.agent}"
+    )
+
+    print(
+        f"Confidence: {result.confidence}"
+    )
+
+    print(
+        f"Reason: {result.reasoning}"
+    )
+tasks = [
+    "Design AKS networking architecture",
+    "Create FastAPI backend",
+    "Deploy Kubernetes cluster",
+    "Write project documentation",
+    "Debug container startup failure",
+]
+
+
+for task in tasks:
+
+    result = router.route(task)
+
+    print(
+        "\n========================"
+    )
+
+    print(
+        f"Task: {task}"
+    )
+
+    print(
+        f"Agent: {result.agent}"
+    )
+
+    print(
+        f"Confidence: {result.confidence}"
+    )
+
+    print(
+        f"Reason: {result.reasoning}"
     )
