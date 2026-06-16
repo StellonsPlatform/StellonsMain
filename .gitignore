@@ -2,3 +2,9 @@
 .env
 __pycache__
 .vscode
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+generated/.terraform/

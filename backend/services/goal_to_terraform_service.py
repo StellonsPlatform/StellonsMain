@@ -1,5 +1,5 @@
-from backend.services.infrastructure_aggregator import (
-    InfrastructureAggregator,
+from backend.services.infrastructure_intent_service import (
+    InfrastructureIntentService,
 )
 
 from backend.generators.terraform_generator import (
@@ -15,8 +15,8 @@ class GoalToTerraformService:
 
     def __init__(self):
 
-        self.aggregator = (
-            InfrastructureAggregator()
+        self.intent_service = (
+            InfrastructureIntentService()
         )
 
         self.generator = (
@@ -26,19 +26,25 @@ class GoalToTerraformService:
     def generate(
         self,
         goal: str,
-        tasks: list[str],
     ):
 
-        context = self.aggregator.aggregate(
-            goal=goal,
-            tasks=tasks,
+        intent = (
+            self.intent_service.extract(
+                goal
+            )
         )
 
         request = InfrastructureRequest(
-            cloud=context.cloud,
-            resource_type=context.resource_type,
-            region=context.region,
-            node_count=context.node_count,
+            cloud=intent.cloud,
+            resource_type=intent.resource_type,
+            region=intent.region,
+            node_count=intent.node_count,
+            environment=intent.environment,
+            monitoring=intent.monitoring,
+            cluster_count=intent.cluster_count,
+            sku_tier=intent.sku_tier,
+            redundancy=intent.redundancy,
+            sidecar_support=intent.sidecar_support,
         )
 
         return self.generator.generate(
