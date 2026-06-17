@@ -23,9 +23,13 @@ from backend.services.terraform_packaging_service import (
     TerraformPackagingService,
 )
 
+from backend.services.terraform_cost_service import (
+    TerraformCostService,
+)
+
 app = FastAPI(
     title="Stellons API",
-    version="0.4.17",
+    version="0.4.18",
 )
 
 intent_service = (
@@ -44,14 +48,20 @@ packaging_service = (
     TerraformPackagingService()
 )
 
+cost_service = (
+    TerraformCostService()
+)
+
+
 @app.get("/")
 def root():
 
     return {
         "service": "Stellons API",
-        "version": "0.4.17",
-        "status": "running"
-    },
+        "version": "0.4.18",
+        "status": "running",
+    }
+
 
 @app.post(
     "/terraform/export",
@@ -64,6 +74,12 @@ def export_terraform(
     intent = (
         intent_service.extract(
             request.goal
+        )
+    )
+
+    cost_estimate = (
+        cost_service.estimate(
+            intent
         )
     )
 
@@ -95,12 +111,17 @@ def export_terraform(
     return TerraformResponse(
         success=True,
         intent=intent.model_dump(),
-        validation=validation_result.model_dump(),
+        cost_estimation=(
+            cost_estimate.model_dump()
+        ),
+        validation=(
+            validation_result.model_dump()
+        ),
         export_path=export_path,
         files=files,
         file_count=len(files),
         generated_at=datetime.utcnow().isoformat(),
         cloud=intent.cloud,
         resource_type=intent.resource_type,
-        api_version="0.4.17",
+        api_version="0.4.18",
     )

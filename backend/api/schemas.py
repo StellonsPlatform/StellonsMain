@@ -12,6 +12,8 @@ class TerraformResponse(BaseModel):
 
     intent: dict
 
+    cost_estimation: dict
+
     validation: dict
 
     export_path: str
