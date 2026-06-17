@@ -1,24 +1,31 @@
 from pathlib import Path
-from backend.llm.nvidia_client import NvidiaClient
+
+from backend.llm.nvidia_client import (
+    NvidiaClient,
+)
 
 
 class BaseAgent:
 
-    def __init__(self, prompt_file: str):
+    def __init__(
+        self,
+        prompt_file: str,
+    ):
 
         self.client = NvidiaClient()
 
         self.system_prompt = Path(
             prompt_file
-        ).read_text()
+        ).read_text(
+            encoding="utf-8"
+        )
 
-    def execute(self, task: str):
+    def execute(
+        self,
+        task: str,
+    ):
 
-        prompt = f"""
-{self.system_prompt}
-
-Task:
-{task}
-"""
-
-        return self.client.generate(prompt)
+        return self.client.generate(
+            system_prompt=self.system_prompt,
+            user_prompt=task,
+        )

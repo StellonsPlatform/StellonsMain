@@ -2,3 +2,11 @@
 .env
 __pycache__
 .vscode
+
+generated/*
+!generated/.gitkeep
+
+generated/.terraform/
+generated/.terraform.lock.hcl
+generated/*.tfstate
+generated/*.tfstate.*
