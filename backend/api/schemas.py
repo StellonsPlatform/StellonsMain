@@ -12,6 +12,12 @@ class TerraformResponse(BaseModel):
 
     intent: dict
 
+    policy_profile: str
+
+    policy: dict
+
+    cost_estimation: dict
+
     validation: dict
 
     export_path: str
